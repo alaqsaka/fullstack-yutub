@@ -55,7 +55,7 @@ export const getUser = async (req, res, next) => {
 export const subscribe = async (req, res, next) => {
   try {
     // get currently logged in user
-    await User.findById(req.user.id, {
+    await User.findByIdAndUpdate(req.user.id, {
       // push subscribed user id to array currently logged in user
       $push: { subscribedUsers: req.params.id },
     });
@@ -78,7 +78,7 @@ export const subscribe = async (req, res, next) => {
 export const unsubscribe = async (req, res, next) => {
   try {
     // get currently logged in user
-    await User.findById(req.user.id, {
+    await User.findByIdAndUpdate(req.user.id, {
       // remove subscribed user id to array currently logged in user
       $pull: { subscribedUsers: req.params.id },
     });
