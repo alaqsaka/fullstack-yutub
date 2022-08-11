@@ -69,7 +69,7 @@ export const getVideo = async (req, res, next) => {
     const video = await Video.findById(req.params.id);
     res.status(200).json({
       status: 200,
-      status: true,
+      success: true,
       video,
     });
   } catch (error) {
@@ -112,7 +112,7 @@ export const trend = async (req, res, next) => {
     const videos = await Video.find().sort({ views: -1 });
     res.status(200).json({
       status: 200,
-      status: true,
+      success: true,
       data: videos,
     });
   } catch (error) {
@@ -146,12 +146,11 @@ export const sub = async (req, res, next) => {
 export const getByTag = async (req, res, next) => {
   try {
     const tags = req.query.tags.split(",");
-    console.log(tags);
     // will return videos with tags sent by query
     const videos = await Video.find({ tags: { $in: tags } }).limit(20);
     res.status(200).json({
       status: 200,
-      status: true,
+      success: true,
       data: videos,
     });
   } catch (error) {
@@ -160,13 +159,15 @@ export const getByTag = async (req, res, next) => {
 };
 
 export const search = async (req, res, next) => {
+  const query = req.query.q;
   try {
-    // will return videos sorted by the most viewed video
-    const videos = await Video.find().sort({ views: -1 });
+    const videos = await Video.find({
+      title: { $regex: query, $options: "i" },
+    }).limit(40);
     res.status(200).json({
       status: 200,
-      status: true,
-      videos,
+      success: true,
+      data: videos,
     });
   } catch (error) {
     next(error);
